@@ -24,9 +24,9 @@ endif
 #target de compilacao (comando pra compilar no windows -> mingw32-make || comando pra compilar no linux -> make)
 all:
 #faco a compilacao dos arquivos do src (.c) e transformo-os em objetos
-	$(CC) -c $(SRC)/NOME.c $(HEADER) -o $(OBJ)/NOME.o
-	
-	
+	$(CC) -c $(SRC)/backtracking.c $(HEADER) -o $(OBJ)/backtracking.o
+	$(CC) -c $(SRC)/labirinto.c $(HEADER) -o $(OBJ)/labirinto.o
+	$(CC) -c $(SRC)/saida.c $(HEADER) -o $(OBJ)/saida.o
 
 #faco a compilacao do main tranformando-o em um executavel
 	$(CC) $(TP)/main.c $(OBJ)/*.o $(HEADER) -o $(EXEC) -lm

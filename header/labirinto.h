@@ -1,7 +1,7 @@
 #ifndef LABIRINTO_H
 #define LABIRINTO_H
 
-#include <stbool.h>
+#include <stdbool.h>
 
 typedef struct Labirinto{
     int linhas, colunas;
@@ -9,7 +9,7 @@ typedef struct Labirinto{
     char **mapa;
     bool **visitado;
     int (*caminho)[2];          //caminho[i] = [linha,coluna]
-    int tamanho;
+    int tamanhoCaminho;
     int inicioL, inicioC;
 } Labirinto;
 
@@ -20,3 +20,4 @@ void liberarLabirinto(Labirinto *lab);
 
 int carregarLabirinto(Labirinto *lab, const char *nomeArquivo);
 
+#endif 

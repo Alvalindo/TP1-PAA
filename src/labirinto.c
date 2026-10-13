@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "labirinto.h"
+#include "../header/labirinto.h"
 
 void liberarLabirinto(Labirinto *lab){
     if (lab == NULL){
@@ -52,6 +52,7 @@ int carregarLabirinto(Labirinto *lab, const char *nomeArquivo){
     lab -> linhas = linhas;
     lab -> colunas = colunas;
     lab -> chavesNecessarias = chaves;
+    lab -> tamanhoCaminho = 0;
 
     lab -> mapa = calloc(linhas, sizeof(char*));
     lab -> visitado = calloc(linhas, sizeof(bool*));
