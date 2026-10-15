@@ -27,6 +27,8 @@ all:
 	$(CC) -c $(SRC)/backtracking.c $(HEADER) -o $(OBJ)/backtracking.o
 	$(CC) -c $(SRC)/labirinto.c $(HEADER) -o $(OBJ)/labirinto.o
 	$(CC) -c $(SRC)/saida.c $(HEADER) -o $(OBJ)/saida.o
+	$(CC) -c $(SRC)/caminho.c $(HEADER) -o $(OBJ)/caminho.o
+	$(CC) -c $(SRC)/todos_os_caminhos.c $(HEADER) -o $(OBJ)/todos_os_caminhos.o
 
 #faco a compilacao do main tranformando-o em um executavel
 	$(CC) $(TP)/main.c $(OBJ)/*.o $(HEADER) -o $(EXEC) -lm
