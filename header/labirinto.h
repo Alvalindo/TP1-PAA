@@ -20,4 +20,6 @@ void liberarLabirinto(Labirinto *lab);
 
 int carregarLabirinto(Labirinto *lab, const char *nomeArquivo);
 
+void sincronizarMatrizVisitado(Labirinto *lab);
+
 #endif 

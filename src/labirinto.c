@@ -123,3 +123,21 @@ int carregarLabirinto(Labirinto *lab, const char *nomeArquivo){
 
     return 1;
 }
+
+void sincronizarMatrizVisitado(Labirinto *lab) {
+    if (!lab || !lab->visitado) return;
+    
+    for (int i = 0; i < lab->linhas; i++) {
+        for (int j = 0; j < lab->colunas; j++) {
+            lab->visitado[i][j] = false;
+        }
+    }
+    
+    for (int i = 0; i < lab->tamanhoCaminho; i++) {
+        int r = lab->caminho[i][0];
+        int c = lab->caminho[i][1];
+        if (r >= 0 && r < lab->linhas && c >= 0 && c < lab->colunas) {
+            lab->visitado[r][c] = true;
+        }
+    }
+}
