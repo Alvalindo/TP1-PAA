@@ -9,7 +9,6 @@ void imprimirSemCaminho(void);
 
 void imprimirCaminhoCriativo(Labirinto *lab); //Extra, print criativo
 
-void animarCaminho(Labirinto *lab, int atrasoMs);   //Continuação do extra, animação do caminho encontrado
 
 
 #endif

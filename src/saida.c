@@ -46,3 +46,5 @@ void imprimirCaminhoCriativo(Labirinto *lab){         //Extra, print criativo
     desenharMapa(lab, -1, -1);  //Desenha o mapa sem o personagem
     printf("\n");
 }
+
+ 
