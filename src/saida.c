@@ -6,7 +6,7 @@ void imprimirCaminhoPadrao(Labirinto *lab){          //Saída padrão
         if (i > 0){
             printf(",");
         }
-        printf("[%d, %d]", lab -> caminho[i][0], lab -> caminho[i][1]); // Imprime as coordenadas do caminho encontrado     
+        printf("[%d,%d]", lab -> caminho[i][0], lab -> caminho[i][1]); // Imprime as coordenadas do caminho encontrado     
     }
     printf("\n");   
 }
