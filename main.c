@@ -8,6 +8,8 @@
 #include "header/saida.h"
 #include "header/todos_os_caminhos.h"
 
+#define LIMITE_CRIATIVO 10 
+
 void exibirMenu(void) {
     printf("\n=========================================\n");
     printf("   EXPLORADOR DE LABIRINTO   \n");
@@ -17,6 +19,7 @@ void exibirMenu(void) {
     printf("2. Resolver (Buscar PRIMEIRO caminho valido)\n");
     printf("3. Resolver (Buscar TODOS os caminhos validos)\n");
     printf("4. Exibir caminho formatado/criativo\n");
+    printf("5. Exibir TODOS os caminhos de forma criativa (apos a opcao 3)\n");
     printf("0. Sair\n");
 
     printf("=========================================\n");
@@ -26,6 +29,7 @@ void exibirMenu(void) {
 
 int main(void) {
     Labirinto lab = {0};
+    TodosOsCaminhos *listaCaminhos = NULL;
     
     int arquivoCarregado = 0;
     int opcao = -1;
@@ -45,6 +49,8 @@ int main(void) {
                 scanf("%255s", caminhoArquivo);
 
                 if (arquivoCarregado) {
+                    todos_caminhos_liberar(listaCaminhos);
+                     listaCaminhos = NULL;
                     liberarLabirinto(&lab);
                     arquivoCarregado = 0;
                 }
@@ -91,7 +97,9 @@ int main(void) {
                 }
 
                 caminho_inicializar(&lab);
-                TodosOsCaminhos *listaCaminhos = todos_caminhos_criar();
+                sincronizarMatrizVisitado(&lab);
+                todos_caminhos_liberar(listaCaminhos); 
+                listaCaminhos = todos_caminhos_criar();
 
                 if (!listaCaminhos) {
                     printf("Erro ao alocar memoria para a busca de todos os caminhos.\n");
@@ -102,7 +110,7 @@ int main(void) {
                 buscar_todos_os_caminhos(&lab, lab.inicioL, lab.inicioC, 0, listaCaminhos);
                 todos_caminhos_imprimir(listaCaminhos);
 
-                todos_caminhos_liberar(listaCaminhos);
+                
                 break;
             }
 
@@ -122,6 +130,21 @@ int main(void) {
                 break;
             }
 
+            case 5: {
+                if (!arquivoCarregado) {
+                    printf("\nErro: Nenhum labirinto foi carregado ainda. Use a Opcao 1.\n");
+                    break;
+                }
+ 
+                if (listaCaminhos == NULL) {
+                    printf("\nExecute primeiro a busca de todos os caminhos (Opcao 3).\n");
+                    break;
+                }
+ 
+                imprimirTodosCaminhosCriativo(&lab, listaCaminhos, LIMITE_CRIATIVO);
+                break;
+            }
+
             case 0:
                 printf("\nEncerrando o programa...\n");
                 break;
@@ -131,6 +154,8 @@ int main(void) {
                 break;
         }
     }
+
+    todos_caminhos_liberar(listaCaminhos);
 
     if (arquivoCarregado) {
         liberarLabirinto(&lab);
