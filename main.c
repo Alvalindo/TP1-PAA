@@ -8,7 +8,12 @@
 #include "header/saida.h"
 #include "header/todos_os_caminhos.h"
 
-#define LIMITE_CRIATIVO 10 
+#define LIMITE_CRIATIVO 10
+
+#ifdef _WIN32
+    #include <windows.h>
+#endif
+
 
 void exibirMenu(void) {
     printf("\n=========================================\n");
@@ -28,6 +33,12 @@ void exibirMenu(void) {
 }
 
 int main(void) {
+
+    #ifdef _WIN32
+        SetConsoleOutputCP(CP_UTF8);
+        SetConsoleCP(CP_UTF8);
+    #endif
+
     Labirinto lab = {0};
     TodosOsCaminhos *listaCaminhos = NULL;
     
