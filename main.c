@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "header/labirinto.h"
@@ -7,30 +6,14 @@
 #include "header/caminho.h"
 #include "header/saida.h"
 #include "header/todos_os_caminhos.h"
+#include "header/analise.h"
 
-#define LIMITE_CRIATIVO 10
+#include "header/utils.h"
 
 #ifdef _WIN32
     #include <windows.h>
 #endif
 
-
-void exibirMenu(void) {
-    printf("\n=========================================\n");
-    printf("   EXPLORADOR DE LABIRINTO   \n");
-    printf("=========================================\n");
-
-    printf("1. Carregar labirinto de arquivo\n");
-    printf("2. Resolver (Buscar PRIMEIRO caminho valido)\n");
-    printf("3. Resolver (Buscar TODOS os caminhos validos)\n");
-    printf("4. Exibir caminho formatado/criativo\n");
-    printf("5. Exibir TODOS os caminhos de forma criativa (apos a opcao 3)\n");
-    printf("0. Sair\n");
-
-    printf("=========================================\n");
-
-    printf("Escolha uma opcao: ");
-}
 
 int main(void) {
 
@@ -41,75 +24,93 @@ int main(void) {
 
     Labirinto lab = {0};
     TodosOsCaminhos *listaCaminhos = NULL;
-    
+
     int arquivoCarregado = 0;
     int opcao = -1;
+    char entrada[64];
     char caminhoArquivo[256];
 
     while (opcao != 0) {
         exibirMenu();
-        if (scanf("%d", &opcao) != 1) {
+
+        if (!lerLinha(entrada, sizeof(entrada))) {   // EOF (entrada redirecionada acabou)
+            opcao = 0;
+            printf("\n");
+        } else if (sscanf(entrada, "%d", &opcao) != 1) {
             printf("\nOpcao invalida. Digite um numero.\n");
-            while (getchar() != '\n');
+            opcao = -1;
             continue;
         }
 
         switch (opcao) {
             case 1: {
-                printf("\nDigite o caminho do arquivo de entrada (ex: entrada.txt): ");
-                scanf("%255s", caminhoArquivo);
+                descartarLabirinto(&lab, &listaCaminhos, &arquivoCarregado);
 
-                if (arquivoCarregado) {
-                    todos_caminhos_liberar(listaCaminhos);
-                     listaCaminhos = NULL;
-                    liberarLabirinto(&lab);
-                    arquivoCarregado = 0;
+                if (gerarLabirinto(&lab)) {
+                    arquivoCarregado = 1;
+                } else {
+                    memset(&lab, 0, sizeof(lab));
                 }
+                break;
+            }
+
+            case 2: {
+                printf("\nDigite o caminho do arquivo de entrada (ex: labirinto.txt): ");
+                if (!lerLinha(caminhoArquivo, sizeof(caminhoArquivo)) || caminhoArquivo[0] == '\0') {
+                    printf("Nenhum arquivo informado.\n");
+                    break;
+                }
+
+                descartarLabirinto(&lab, &listaCaminhos, &arquivoCarregado);
 
                 if (carregarLabirinto(&lab, caminhoArquivo)) {
                     arquivoCarregado = 1;
                     printf("Labirinto carregado com sucesso!\n");
-                    printf("Dimensoes: %dx%d | Chaves Necessarias: %d | Posicao Inicial: (%d, %d)\n", lab.linhas, lab.colunas, lab.chavesNecessarias, lab.inicioL, lab.inicioC);
-                } 
-                
+                    mostrarResumoLabirinto(&lab);
+                }
+
                 else {
                     printf("Falha ao carregar o arquivo especificado.\n");
                 }
                 break;
             }
 
-            case 2: {
+            case 3: {
                 if (!arquivoCarregado) {
-                    printf("\nErro: Nenhum labirinto foi carregado ainda. Use a Opcao 1.\n");
+                    printf("\nErro: Nenhum labirinto disponivel ainda. Use a Opcao 1 (gerar) ou a Opcao 2 (carregar).\n");
                     break;
                 }
 
                 caminho_inicializar(&lab);
 
                 printf("\nBuscando primeiro caminho\n");
+                analise_iniciar(&lab, "Primeiro caminho (explorador_labirinto)");
                 int encontrou = explorador_labirinto(&lab, lab.inicioL, lab.inicioC, 0);
+                analise_finalizar();
 
                 if (encontrou) {
                     printf("\nCaminho encontrado:\n");
                     imprimirCaminhoPadrao(&lab);
-                } 
-                
-                else {
-                    printf("\nnao ha um caminho possivel para a entrada de dados fornecida\n");
                 }
 
+                else {
+                    printf("\n");
+                    imprimirSemCaminho();
+                }
+
+                analise_imprimir_resumo();
                 break;
             }
 
-            case 3: {
+            case 4: {
                 if (!arquivoCarregado) {
-                    printf("\nErro: Nenhum labirinto foi carregado ainda. Use a Opcao 1.\n");
+                    printf("\nErro: Nenhum labirinto disponivel ainda. Use a Opcao 1 (gerar) ou a Opcao 2 (carregar).\n");
                     break;
                 }
 
                 caminho_inicializar(&lab);
                 sincronizarMatrizVisitado(&lab);
-                todos_caminhos_liberar(listaCaminhos); 
+                todos_caminhos_liberar(listaCaminhos);
                 listaCaminhos = todos_caminhos_criar();
 
                 if (!listaCaminhos) {
@@ -118,21 +119,24 @@ int main(void) {
                 }
 
                 printf("\nBuscando todos os caminhos\n");
+                analise_iniciar(&lab, "Todos os caminhos (buscar_todos_os_caminhos)");
                 buscar_todos_os_caminhos(&lab, lab.inicioL, lab.inicioC, 0, listaCaminhos);
-                todos_caminhos_imprimir(listaCaminhos);
+                analise_finalizar();
 
-                
+                todos_caminhos_imprimir(listaCaminhos);
+                analise_imprimir_resumo();
+
                 break;
             }
 
-            case 4: {
+            case 5: {
                 if (!arquivoCarregado) {
-                    printf("\nErro: Nenhum labirinto foi carregado ainda. Use a Opcao 1.\n");
+                    printf("\nErro: Nenhum labirinto disponivel ainda. Use a Opcao 1 (gerar) ou a Opcao 2 (carregar).\n");
                     break;
                 }
 
                 if (lab.tamanhoCaminho == 0) {
-                    printf("\nExecute primeiro a busca (Opcao 2) para gerar o caminho a ser desenhado.\n");
+                    printf("\nExecute primeiro a busca do primeiro caminho (Opcao 3) para gerar o caminho a ser desenhado.\n");
                     break;
                 }
 
@@ -141,20 +145,24 @@ int main(void) {
                 break;
             }
 
-            case 5: {
+            case 6: {
                 if (!arquivoCarregado) {
-                    printf("\nErro: Nenhum labirinto foi carregado ainda. Use a Opcao 1.\n");
+                    printf("\nErro: Nenhum labirinto disponivel ainda. Use a Opcao 1 (gerar) ou a Opcao 2 (carregar).\n");
                     break;
                 }
- 
+
                 if (listaCaminhos == NULL) {
-                    printf("\nExecute primeiro a busca de todos os caminhos (Opcao 3).\n");
+                    printf("\nExecute primeiro a busca de todos os caminhos (Opcao 4).\n");
                     break;
                 }
- 
+
                 imprimirTodosCaminhosCriativo(&lab, listaCaminhos, LIMITE_CRIATIVO);
                 break;
             }
+
+            case 7:
+                alternarModoAnalise();
+                break;
 
             case 0:
                 printf("\nEncerrando o programa...\n");

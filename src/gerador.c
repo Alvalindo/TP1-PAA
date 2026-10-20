@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "mapa.h"
+#include "../header/gerador.h"
 
 static const int dL[4] = {-1, 1, 0, 0};
 static const int dC[4] = {0, 0, -1, 1};
@@ -20,6 +20,7 @@ Mapa* AlocarMapa(int linhas, int colunas, int chaves_necessarias) {
     m->inicio_coluna = 0;
     m->bau_linha = linhas - 1;
     m->bau_coluna = colunas - 1;
+    m->caminho_garantido = 0;
 
     m->matriz = (char**) malloc(linhas * sizeof(char*));
     if (!m->matriz) {
@@ -58,7 +59,7 @@ void LiberarMapa(Mapa *m) {
 Mapa* CarregarMapaArquivo(const char *nome_arquivo) {
     FILE *fp = fopen(nome_arquivo, "r");
     if (!fp) {
-        perror("Erro ao abrir o ficheiro do mapa");
+        perror("Erro ao abrir o arquivo do mapa");
         return NULL;
     }
 
@@ -103,15 +104,18 @@ int SalvarMapaArquivo(const Mapa *m, const char *nome_arquivo) {
 
     FILE *fp = fopen(nome_arquivo, "w");
     if (!fp) {
-        perror("Erro ao criar ficheiro para guardar o mapa");
+        perror("Erro ao criar o arquivo para salvar o mapa");
         return 0;
     }
 
     fprintf(fp, "%d %d\n", m->linhas, m->colunas);
     fprintf(fp, "%d\n", m->chaves_necessarias);
 
+    // Formato da especificação: células separadas por espaço
     for (int i = 0; i < m->linhas; i++) {
-        fprintf(fp, "%s\n", m->matriz[i]);
+        for (int j = 0; j < m->colunas; j++) {
+            fprintf(fp, "%c%c", m->matriz[i][j], (j < m->colunas - 1) ? ' ' : '\n');
+        }
     }
 
     fclose(fp);
@@ -127,9 +131,14 @@ static void BaralharDirecoes(int dirs[4]) {
     }
 }
 
+// Limite de chamadas da construção do caminho: sem ele, a busca por um caminho
+// simples longo pode levar tempo exponencial em mapas grandes/apertados.
+static long orcamento_construcao;
+
 static int ConstruirCaminhoSimples(int l, int c, int passo_atual, int meta,
                                    int linhas, int colunas, int **visitado,
                                    int *cam_l, int *cam_c) {
+    if (--orcamento_construcao < 0) return 0;
     visitado[l][c] = 1;
     cam_l[passo_atual] = l;
     cam_c[passo_atual] = c;
@@ -189,17 +198,26 @@ Mapa* GerarMapaParametrizado(ParametrosGeracao params) {
         int max_passos = (total_celulas > min_passos * 2) ? (total_celulas / 2) : total_celulas;
         if (max_passos < min_passos) max_passos = min_passos;
 
-        int tamanho_caminho = min_passos + (rand() % (max_passos - min_passos + 1));
+        int *cam_l = (int*) malloc(max_passos * sizeof(int));
+        int *cam_c = (int*) malloc(max_passos * sizeof(int));
+        int tamanho_caminho = 0;
 
-        int *cam_l = (int*) malloc(tamanho_caminho * sizeof(int));
-        int *cam_c = (int*) malloc(tamanho_caminho * sizeof(int));
+        // Várias tentativas: cada uma sorteia tamanho e ponto de partida, com orçamento próprio
+        for (int tentativa = 0; tentativa < 200 && !caminho_criado && cam_l && cam_c; tentativa++) {
+            tamanho_caminho = min_passos + (rand() % (max_passos - min_passos + 1));
 
-        int ini_l = rand() % (params.linhas / 2 + 1);
-        int ini_c = rand() % params.colunas;
+            int ini_l = rand() % (params.linhas / 2 + 1);
+            int ini_c = rand() % params.colunas;
 
-        if (ConstruirCaminhoSimples(ini_l, ini_c, 0, tamanho_caminho,
-                                    params.linhas, params.colunas, protegido, cam_l, cam_c)) {
-            caminho_criado = 1;
+            orcamento_construcao = 50L * total_celulas;
+            if (ConstruirCaminhoSimples(ini_l, ini_c, 0, tamanho_caminho,
+                                        params.linhas, params.colunas, protegido, cam_l, cam_c)) {
+                caminho_criado = 1;
+            }
+        }
+
+        if (caminho_criado) {
+            m->caminho_garantido = 1;
 
             m->inicio_linha = cam_l[0];
             m->inicio_coluna = cam_c[0];

@@ -1,3 +1,6 @@
+#ifndef BACKTRACKING_H
+#define BACKTRACKING_H
+
 #include <stdio.h>
 
 #include "../header/labirinto.h"
@@ -16,4 +19,4 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
 //Verifica se o caminho foi visitado
 bool caminho_visitado(Labirinto* _labirinto, int YposNova, int XposNova);
 
-
+#endif

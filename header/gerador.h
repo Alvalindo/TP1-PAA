@@ -1,5 +1,5 @@
-#ifndef MAPA_H
-#define MAPA_H
+#ifndef GERADOR_H
+#define GERADOR_H
 
 // Elementos do labirinto
 #define SALA_VAZIA '0'
@@ -18,6 +18,7 @@ typedef struct {
     int bau_linha;
     int bau_coluna;
     char **matriz;
+    int caminho_garantido;   // 1 = o gerador conseguiu embutir um caminho valido no mapa
 } Mapa;
 
 // Estrutura de parâmetros para o Gerador de Mapas (Requisito Extra)

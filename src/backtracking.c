@@ -1,7 +1,10 @@
 #include "../header/backtracking.h"
+#include "../header/analise.h"
 
 int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, int chavesColetadas){
-    
+
+    //Modo analise: registra a entrada nesta chamada recursiva
+    analise_entrar(YposAtual, XposAtual, chavesColetadas);
 
     if(_labirinto->mapa[YposAtual][XposAtual] == 'X' && _labirinto->chavesNecessarias == chavesColetadas){
 
@@ -13,6 +16,7 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
         printf("BAU ENCONTRADO em (%d,%d)!\n", YposAtual, XposAtual);
 
         //Báu aberto e caminho econtrado
+        analise_sair(ANALISE_SOLUCAO);
         return 1;
     }
 
@@ -40,6 +44,7 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
            //YposAtual, XposAtual, YposNova, XposNova);
             
         if(explorador_labirinto(_labirinto, YposNova , XposNova, chavesColetadas)){
+            analise_sair(ANALISE_SUCESSO);
             return 1;
         }
     }
@@ -54,6 +59,7 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
            //YposAtual, XposAtual, YposNova, XposNova);
 
         if(explorador_labirinto(_labirinto, YposNova , XposNova, chavesColetadas)){
+            analise_sair(ANALISE_SUCESSO);
             return 1;
         }
     }
@@ -68,6 +74,7 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
            //YposAtual, XposAtual, YposNova, XposNova);
 
         if(explorador_labirinto(_labirinto, YposNova , XposNova, chavesColetadas)){
+            analise_sair(ANALISE_SUCESSO);
             return 1;
         }
     }
@@ -82,6 +89,7 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
            //YposAtual, XposAtual, YposNova, XposNova);
 
         if(explorador_labirinto(_labirinto, YposNova , XposNova, chavesColetadas)){
+            analise_sair(ANALISE_SUCESSO);
             return 1;
         }
     }
@@ -89,6 +97,7 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
 
     //Se não encotrou nenhum caminho
     _labirinto->tamanhoCaminho--;
+    analise_sair(ANALISE_RETROCESSO);
     return 0;
 
 }

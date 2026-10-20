@@ -29,6 +29,9 @@ all:
 	$(CC) -c $(SRC)/saida.c $(HEADER) -o $(OBJ)/saida.o
 	$(CC) -c $(SRC)/caminho.c $(HEADER) -o $(OBJ)/caminho.o
 	$(CC) -c $(SRC)/todos_os_caminhos.c $(HEADER) -o $(OBJ)/todos_os_caminhos.o
+	$(CC) -c $(SRC)/gerador.c $(HEADER) -o $(OBJ)/gerador.o
+	$(CC) -c $(SRC)/analise.c $(HEADER) -o $(OBJ)/analise.o
+	$(CC) -c $(SRC)/utils.c $(HEADER) -o $(OBJ)/utils.o
 
 #faco a compilacao do main tranformando-o em um executavel
 	$(CC) $(TP)/main.c $(OBJ)/*.o $(HEADER) -o $(EXEC) -lm

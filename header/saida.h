@@ -6,7 +6,9 @@
 
 void imprimirCaminhoPadrao(Labirinto *lab);   // Saída padrão 
 
-void imprimirSemCaminho(void);
+void imprimirSemCaminho(void);                //Mensagem de "sem solução" da especificação
+
+void imprimirLabirinto(const Labirinto *lab); //Desenha o labirinto (usado após gerar/carregar um mapa)
 
 void imprimirCaminhoCriativo(Labirinto *lab); //Extra, print criativo
 

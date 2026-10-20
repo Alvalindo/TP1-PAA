@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "../header/todos_os_caminhos.h"
 #include "../header/caminho.h"
+#include "../header/analise.h"
 
 TodosOsCaminhos* todos_caminhos_criar(void) {
     TodosOsCaminhos *lista = (TodosOsCaminhos*) malloc(sizeof(TodosOsCaminhos));
@@ -83,15 +84,25 @@ void todos_caminhos_liberar(TodosOsCaminhos *lista) {
 }
 
 void buscar_todos_os_caminhos(Labirinto *lab, int linha, int coluna, int chavesColetadas, TodosOsCaminhos *lista) {
+    //Modo analise: registra a entrada nesta chamada recursiva
+    analise_entrar(linha, coluna, chavesColetadas);
+
     // Validação de limites da matriz, paredes ('1') e posições já visitadas
     if (linha < 0 || linha >= lab->linhas || coluna < 0 || coluna >= lab->colunas) {
+        analise_sair(ANALISE_PODA_FORA);
         return;
     }
-    if (lab->mapa[linha][coluna] == '1' || lab->visitado[linha][coluna]) {
+    if (lab->mapa[linha][coluna] == '1') {
+        analise_sair(ANALISE_PODA_PAREDE);
+        return;
+    }
+    if (lab->visitado[linha][coluna]) {
+        analise_sair(ANALISE_PODA_VISITADA);
         return;
     }
 
     char celulaAtual = lab->mapa[linha][coluna];
+    AnaliseResultado resultado = ANALISE_RETROCESSO;
 
     // Se for uma chave 'C', contabiliza a coleta
     if (celulaAtual == 'C') {
@@ -105,6 +116,7 @@ void buscar_todos_os_caminhos(Labirinto *lab, int linha, int coluna, int chavesC
     // Caso de parada: encontrou o baú 'X' com todas as chaves
     if (celulaAtual == 'X' && chavesColetadas == lab->chavesNecessarias) {
         todos_caminhos_adicionar(lista, lab);
+        resultado = ANALISE_SOLUCAO;
     } else {
         // Direções de movimentação: Cima, Baixo, Esquerda, Direita
         int dirL[] = {-1, 1, 0, 0};
@@ -118,4 +130,6 @@ void buscar_todos_os_caminhos(Labirinto *lab, int linha, int coluna, int chavesC
     // Backtracking: desfaz as escolhas para explorar novos caminhos
     caminho_remover(lab);
     lab->visitado[linha][coluna] = false;
+
+    analise_sair(resultado);
 }

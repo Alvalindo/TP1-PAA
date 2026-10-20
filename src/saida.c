@@ -13,7 +13,7 @@ void imprimirCaminhoPadrao(Labirinto *lab){          //Saída padrão
 }
 
 void imprimirSemCaminho(void){          
-    printf("Sem caminho\n");
+    printf("Não há um caminho possível para a entrada de dados fornecida\n");   //Mensagem exigida pela especificação
 }
 
 static void desenharMapa(const Labirinto *lab, bool **marcado, int pl, int pc){    //pl = posição linha, pc = posição coluna
@@ -40,6 +40,12 @@ static void desenharMapa(const Labirinto *lab, bool **marcado, int pl, int pc){ 
         }
         printf("\n");
     }
+}
+
+void imprimirLabirinto(const Labirinto *lab){      //Desenha o labirinto puro, sem caminho
+    printf("\nLabirinto %dx%d | chaves necessarias: %d\n", lab -> linhas, lab -> colunas, lab -> chavesNecessarias);
+    desenharMapa(lab, lab -> visitado, -1, -1);
+    printf("\n");
 }
 
 void imprimirCaminhoCriativo(Labirinto *lab){         //Extra, print criativo
