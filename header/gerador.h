@@ -21,7 +21,7 @@ typedef struct {
     int caminho_garantido;   // 1 = o gerador conseguiu embutir um caminho valido no mapa
 } Mapa;
 
-// Estrutura de parâmetros para o Gerador de Mapas (Requisito Extra)
+// Estrutura de parâmetros para o Gerador de Mapas
 typedef struct {
     int linhas;              // Número de linhas do labirinto
     int colunas;             // Número de colunas do labirinto
@@ -31,15 +31,11 @@ typedef struct {
     unsigned int semente;    // Semente para rand()
 } ParametrosGeracao;
 
-// Funções de ciclo de vida e memória
+
 Mapa* AlocarMapa(int linhas, int colunas, int chaves_necessarias);
 void LiberarMapa(Mapa *m);
-
-// Funções de Entrada e Saída (Ficheiros e Terminal)
 Mapa* CarregarMapaArquivo(const char *nome_arquivo);
 int SalvarMapaArquivo(const Mapa *m, const char *nome_arquivo);
-
-// Funções do Gerador de Mapas Parametrizado
 Mapa* GerarMapaParametrizado(ParametrosGeracao params);
 int GerarESalvarMapa(ParametrosGeracao params, const char *nome_arquivo);
 
