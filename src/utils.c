@@ -17,6 +17,7 @@
 #define LIMITE_CRIATIVO 20
 #define TAMANHO_MAXIMO_GERADO 50          // evita recursao profunda demais (pilha) em mapas gigantes
 #define ARQUIVO_GERADO_PADRAO "labirinto_gerado.txt"
+#define PASTA_MAPAS "testes/"    // pasta onde os mapas gerados sao guardados
 #define RASTREIO_PADRAO 100               // chamadas exibidas no modo analise, por padrao
 
 #ifdef _WIN32
@@ -142,9 +143,16 @@ int gerarLabirinto(Labirinto *lab) {
     }
     p.semente = (unsigned int)semente;
 
-    printf("Arquivo de saida [%s]: ", ARQUIVO_GERADO_PADRAO);
-    if (!lerLinha(arquivo, sizeof(arquivo)) || arquivo[0] == '\0') {
-        snprintf(arquivo, sizeof(arquivo), "%s", ARQUIVO_GERADO_PADRAO);
+    char nome[200];
+    printf("Nome do arquivo de saida (salvo em %s) [%s]: ", PASTA_MAPAS, ARQUIVO_GERADO_PADRAO);
+    if (!lerLinha(nome, sizeof(nome)) || nome[0] == '\0') {
+        snprintf(nome, sizeof(nome), "%s", ARQUIVO_GERADO_PADRAO);
+    }
+ 
+    if (strchr(nome, '/') != NULL || strchr(nome, '\\') != NULL) {           // Se o usuario digitou um caminho (com / ou \), usa como esta; senao guarda na pasta de mapas
+        snprintf(arquivo, sizeof(arquivo), "%s", nome);
+    } else {
+        snprintf(arquivo, sizeof(arquivo), "%s%s", PASTA_MAPAS, nome);
     }
 
     Mapa *mapa = GerarMapaParametrizado(p);
