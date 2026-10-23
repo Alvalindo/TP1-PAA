@@ -6,7 +6,7 @@
 #include "labirinto.h"
 #include "todos_os_caminhos.h"
 
-#define LIMITE_CRIATIVO 10
+#define LIMITE_CRIATIVO 20
 
 int lerLinha(char *buf, size_t tam);
 void exibirMenu(void);

@@ -55,7 +55,7 @@ int main(void) {
             }
 
             case 2: {
-                printf("\nDigite o caminho do arquivo de entrada (ex: labirinto.txt): ");
+                printf("\nDigite o caminho do arquivo de entrada (ex: testes/labirinto.txt): ");
                 if (!lerLinha(caminhoArquivo, sizeof(caminhoArquivo)) || caminhoArquivo[0] == '\0') {
                     printf("Nenhum arquivo informado.\n");
                     break;

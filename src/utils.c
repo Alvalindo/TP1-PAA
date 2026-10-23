@@ -14,7 +14,7 @@
 
 #include "../header/utils.h"
 
-#define LIMITE_CRIATIVO 10
+#define LIMITE_CRIATIVO 20
 #define TAMANHO_MAXIMO_GERADO 50          // evita recursao profunda demais (pilha) em mapas gigantes
 #define ARQUIVO_GERADO_PADRAO "labirinto_gerado.txt"
 #define RASTREIO_PADRAO 100               // chamadas exibidas no modo analise, por padrao
