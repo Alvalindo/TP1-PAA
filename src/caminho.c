@@ -31,20 +31,3 @@ void caminho_remover(Labirinto *lab) {
     }
 }
 
-void caminho_imprimir(const Labirinto *lab) {
-    if (lab == NULL) {
-        return;
-    }
-
-    for (int i = 0; i < lab->tamanhoCaminho; i++) {
-        printf("[%d,%d]",
-               lab->caminho[i][0],
-               lab->caminho[i][1]);
-
-        if (i < lab->tamanhoCaminho - 1) {
-            printf(",");
-        }
-    }
-
-    printf("\n");
-}

@@ -13,7 +13,6 @@ int caminho_adicionar(Labirinto *lab, int linha, int coluna);
 // Remove a última posição do caminho
 void caminho_remover(Labirinto *lab);
 
-// Imprime as posições registradas
-void caminho_imprimir(const Labirinto *lab);
+
 
 #endif

@@ -56,48 +56,6 @@ void LiberarMapa(Mapa *m) {
     free(m);
 }
 
-Mapa* CarregarMapaArquivo(const char *nome_arquivo) {
-    FILE *fp = fopen(nome_arquivo, "r");
-    if (!fp) {
-        perror("Erro ao abrir o arquivo do mapa");
-        return NULL;
-    }
-
-    int linhas, colunas, chaves;
-    if (fscanf(fp, "%d %d", &linhas, &colunas) != 2) {
-        fclose(fp);
-        return NULL;
-    }
-    if (fscanf(fp, "%d", &chaves) != 1) {
-        fclose(fp);
-        return NULL;
-    }
-
-    Mapa *m = AlocarMapa(linhas, colunas, chaves);
-    if (!m) {
-        fclose(fp);
-        return NULL;
-    }
-
-    for (int i = 0; i < linhas; i++) {
-        for (int j = 0; j < colunas; j++) {
-            char c;
-            if (fscanf(fp, " %c", &c) == 1) {
-                m->matriz[i][j] = c;
-                if (c == INICIO) {
-                    m->inicio_linha = i;
-                    m->inicio_coluna = j;
-                } else if (c == BAU) {
-                    m->bau_linha = i;
-                    m->bau_coluna = j;
-                }
-            }
-        }
-    }
-
-    fclose(fp);
-    return m;
-}
 
 int SalvarMapaArquivo(const Mapa *m, const char *nome_arquivo) {
     if (!m) return 0;
@@ -283,11 +241,4 @@ Mapa* GerarMapaParametrizado(ParametrosGeracao params) {
     return m;
 }
 
-int GerarESalvarMapa(ParametrosGeracao params, const char *nome_arquivo) {
-    Mapa *m = GerarMapaParametrizado(params);
-    if (!m) return 0;
 
-    int sucesso = SalvarMapaArquivo(m, nome_arquivo);
-    LiberarMapa(m);
-    return sucesso;
-}

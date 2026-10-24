@@ -5,8 +5,6 @@
 #include <time.h>
 
 #include "../header/labirinto.h"
-#include "../header/backtracking.h"
-#include "../header/caminho.h"
 #include "../header/saida.h"
 #include "../header/todos_os_caminhos.h"
 #include "../header/gerador.h"
@@ -14,7 +12,6 @@
 
 #include "../header/utils.h"
 
-#define LIMITE_CRIATIVO 20
 #define TAMANHO_MAXIMO_GERADO 50          // evita recursao profunda demais (pilha) em mapas gigantes
 #define ARQUIVO_GERADO_PADRAO "labirinto_gerado.txt"
 #define PASTA_MAPAS "testes/"    // pasta onde os mapas gerados sao guardados
