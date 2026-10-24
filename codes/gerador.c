@@ -4,8 +4,8 @@
 #include <time.h>
 #include "../headers/gerador.h"
 
-static const int dL[4] = {-1, 1, 0, 0};
-static const int dC[4] = {0, 0, -1, 1};
+int dL[4] = {-1, 1, 0, 0};
+int dC[4] = {0, 0, -1, 1};
 
 Mapa* AlocarMapa(int linhas, int colunas, int chaves_necessarias) {
     if (linhas <= 0 || colunas <= 0) return NULL;
@@ -79,7 +79,7 @@ int SalvarMapaArquivo(const Mapa *m, const char *nome_arquivo) {
     return 1;
 }
 
-static void BaralharDirecoes(int dirs[4]) {
+void BaralharDirecoes(int dirs[4]) {
     for (int i = 3; i > 0; i--) {
         int j = rand() % (i + 1);
         int temp = dirs[i];
@@ -89,9 +89,9 @@ static void BaralharDirecoes(int dirs[4]) {
 }
 
 // Limite de chamadas da construção do caminho
-static long orcamento_construcao;
+long int orcamento_construcao;
 
-static int ConstruirCaminhoSimples(int l, int c, int passo_atual, int meta,
+int ConstruirCaminhoSimples(int l, int c, int passo_atual, int meta,
                                    int linhas, int colunas, int **visitado,
                                    int *cam_l, int *cam_c) {
     if (--orcamento_construcao < 0) return 0;
