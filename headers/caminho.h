@@ -2,7 +2,7 @@
 #ifndef CAMINHO_H
 #define CAMINHO_H
 
-#include "../header/labirinto.h"
+#include "labirinto.h"
 
 // Inicializa o tamanho do caminho
 void caminho_inicializar(Labirinto *lab);

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../header/todos_os_caminhos.h"
-#include "../header/caminho.h"
-#include "../header/analise.h"
+#include "../headers/todos_os_caminhos.h"
+#include "../headers/caminho.h"
+#include "../headers/analise.h"
 
 TodosOsCaminhos* todos_caminhos_criar(void) {
     TodosOsCaminhos *lista = (TodosOsCaminhos*) malloc(sizeof(TodosOsCaminhos));

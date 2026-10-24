@@ -4,13 +4,12 @@
 #include <limits.h>
 #include <time.h>
 
-#include "../header/labirinto.h"
-#include "../header/saida.h"
-#include "../header/todos_os_caminhos.h"
-#include "../header/gerador.h"
-#include "../header/analise.h"
-
-#include "../header/utils.h"
+#include "../headers/labirinto.h"
+#include "../headers/saida.h"
+#include "../headers/todos_os_caminhos.h"
+#include "../headers/gerador.h"
+#include "../headers/analise.h"
+#include "../headers/utils.h"
 
 #define TAMANHO_MAXIMO_GERADO 50          // evita recursao profunda demais (pilha) em mapas gigantes
 #define ARQUIVO_GERADO_PADRAO "labirinto_gerado.txt"

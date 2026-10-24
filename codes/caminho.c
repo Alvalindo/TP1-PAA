@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../header/caminho.h"
+#include "../headers/caminho.h"
 
 void caminho_inicializar(Labirinto *lab) {
     if (lab != NULL) {
@@ -30,4 +30,3 @@ void caminho_remover(Labirinto *lab) {
         lab->tamanhoCaminho--;
     }
 }
-

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../header/saida.h"
+#include "../headers/saida.h"
 
 void imprimirCaminhoPadrao(Labirinto *lab){          //Saída padrão
     for (int i = 0; i < lab -> tamanhoCaminho; i++){

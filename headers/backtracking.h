@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "../header/labirinto.h"
+#include "labirinto.h"
 
 #define Cima -1
 #define baixo 1

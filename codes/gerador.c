@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "../header/gerador.h"
+#include "../headers/gerador.h"
 
 static const int dL[4] = {-1, 1, 0, 0};
 static const int dC[4] = {0, 0, -1, 1};
@@ -240,5 +240,4 @@ Mapa* GerarMapaParametrizado(ParametrosGeracao params) {
 
     return m;
 }
-
 

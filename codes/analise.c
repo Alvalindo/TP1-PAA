@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "../header/analise.h"
+#include "../headers/analise.h"
 
 #define LARGURA_MAX_INDENTACAO 40
 
