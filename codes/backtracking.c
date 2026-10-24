@@ -38,9 +38,6 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
     XposNova = XposAtual;
     if(!(YposNova < 0 || YposNova >= _labirinto->linhas || _labirinto->mapa[YposNova][XposNova] == '1' 
         || caminho_visitado(_labirinto, YposNova, XposNova))){
-
-           //printf("Moveu para cima: (%d,%d) -> (%d,%d)\n",
-           //YposAtual, XposAtual, YposNova, XposNova);
             
         if(explorador_labirinto(_labirinto, YposNova , XposNova, chavesColetadas)){
             analise_sair(analise_estado());
@@ -54,9 +51,6 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
     if(!(XposNova < 0 || XposNova >= _labirinto->colunas || _labirinto->mapa[YposNova][XposNova] == '1' 
         || caminho_visitado(_labirinto, YposNova, XposNova))){
 
-           //printf("Moveu para direita: (%d,%d) -> (%d,%d)\n",
-           //YposAtual, XposAtual, YposNova, XposNova);
-
         if(explorador_labirinto(_labirinto, YposNova , XposNova, chavesColetadas)){
             analise_sair(analise_estado());
             return 1;
@@ -68,9 +62,6 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
     XposNova = XposAtual;
     if(!(YposNova < 0 || YposNova >= _labirinto->linhas || _labirinto->mapa[YposNova][XposNova] == '1' 
         || caminho_visitado(_labirinto, YposNova, XposNova))){
-
-           //printf("Moveu para baixo: (%d,%d) -> (%d,%d)\n",
-           //YposAtual, XposAtual, YposNova, XposNova);
 
         if(explorador_labirinto(_labirinto, YposNova , XposNova, chavesColetadas)){
             analise_sair(analise_estado());
@@ -84,15 +75,11 @@ int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, in
     if(!(XposNova < 0 || XposNova >= _labirinto->colunas || _labirinto->mapa[YposNova][XposNova] == '1' 
         || caminho_visitado(_labirinto, YposNova, XposNova))){
 
-           //printf("Moveu para esquerda: (%d,%d) -> (%d,%d)\n",
-           //YposAtual, XposAtual, YposNova, XposNova);
-
         if(explorador_labirinto(_labirinto, YposNova , XposNova, chavesColetadas)){
             analise_sair(analise_estado());
             return 1;
         }
     }
-
 
     //Se não encotrou nenhum caminho
     _labirinto->tamanhoCaminho--;
