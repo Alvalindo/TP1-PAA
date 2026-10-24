@@ -4,17 +4,13 @@
 #include <limits.h>
 #include <time.h>
 
-#include "../header/labirinto.h"
-#include "../header/backtracking.h"
-#include "../header/caminho.h"
-#include "../header/saida.h"
-#include "../header/todos_os_caminhos.h"
-#include "../header/gerador.h"
-#include "../header/analise.h"
+#include "../headers/labirinto.h"
+#include "../headers/saida.h"
+#include "../headers/todos_os_caminhos.h"
+#include "../headers/gerador.h"
+#include "../headers/analise.h"
+#include "../headers/menu.h"
 
-#include "../header/utils.h"
-
-#define LIMITE_CRIATIVO 20
 #define TAMANHO_MAXIMO_GERADO 50          // evita recursao profunda demais (pilha) em mapas gigantes
 #define ARQUIVO_GERADO_PADRAO "labirinto_gerado.txt"
 #define PASTA_MAPAS "testes/"    // pasta onde os mapas gerados sao guardados
@@ -39,11 +35,11 @@ int lerLinha(char *buf, size_t tam) {
 }
 
 // Le um inteiro em [min, max]. Linha vazia = padrao. Repete ate ser valido.
-static long long lerInteiro(const char *pergunta, long long min, long long max, long long padrao) {
+static long int lerInteiro(const char *pergunta, long int min, long int max, long int padrao) {
     char buf[64];
 
     while (1) {
-        printf("%s [%lld]: ", pergunta, padrao);
+        printf("%s [%ld]: ", pergunta, padrao);
         if (!lerLinha(buf, sizeof(buf))) {
             return padrao;
         }
@@ -52,11 +48,11 @@ static long long lerInteiro(const char *pergunta, long long min, long long max, 
         }
 
         char *fim;
-        long long v = strtoll(buf, &fim, 10);
+        long int v = strtol(buf, &fim, 10);
         if (*fim != '\0') {
             printf("  Valor invalido. Digite um numero inteiro.\n");
         } else if (v < min || v > max) {
-            printf("  Valor fora do intervalo permitido (%lld a %lld).\n", min, max);
+            printf("  Valor fora do intervalo permitido (%ld a %ld).\n", min, max);
         } else {
             return v;
         }
@@ -131,15 +127,15 @@ int gerarLabirinto(Labirinto *lab) {
     p.colunas = (int)lerInteiro("Numero de colunas", 3, TAMANHO_MAXIMO_GERADO, 10);
 
     int maxChaves = p.linhas * p.colunas - 2;     // 'A' e 'X' ocupam duas salas
-    long long chavesPadrao = (maxChaves < 2) ? maxChaves : 2;
+    long int chavesPadrao = (maxChaves < 2) ? maxChaves : 2;
     p.num_chaves = (int)lerInteiro("Chaves necessarias para abrir o bau", 0, maxChaves, chavesPadrao);
 
     p.densidade_paredes = (int)lerInteiro("Densidade de paredes (%)", 0, 100, 30);
     p.garantir_caminho  = lerSimNao("Garantir que exista um caminho valido?", 1);
 
-    long long semente = lerInteiro("Semente aleatoria (0 = sortear)", 0, INT_MAX, 0);
+    long int semente = lerInteiro("Semente aleatoria (0 = sortear)", 0, INT_MAX, 0);
     if (semente == 0) {
-        semente = (long long)time(NULL) % INT_MAX;   // sorteada aqui para poder ser mostrada e reproduzida
+        semente = (long int)time(NULL) % INT_MAX;   // sorteada aqui para poder ser mostrada e reproduzida
     }
     p.semente = (unsigned int)semente;
 
@@ -207,7 +203,7 @@ void alternarModoAnalise(void) {
     printf("chamadas recursivas e o resumo (total de chamadas, nivel maximo, retrocessos, ...).\n");
     printf("Atencao: a busca de TODOS os caminhos faz muitas chamadas; limite o rastreio.\n\n");
 
-    long long limite = lerInteiro("Chamadas recursivas a exibir no rastreio (0 = so resumo, -1 = todas)",
-                                  -1, INT_MAX, RASTREIO_PADRAO);
+    long int limite = lerInteiro("Chamadas recursivas a exibir no rastreio (0 = so resumo, -1 = todas)",
+                                 -1, INT_MAX, RASTREIO_PADRAO);
     analise_configurar(true, limite);
 }

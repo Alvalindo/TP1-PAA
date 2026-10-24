@@ -34,9 +34,8 @@ typedef struct {
 
 Mapa* AlocarMapa(int linhas, int colunas, int chaves_necessarias);
 void LiberarMapa(Mapa *m);
-Mapa* CarregarMapaArquivo(const char *nome_arquivo);
 int SalvarMapaArquivo(const Mapa *m, const char *nome_arquivo);
 Mapa* GerarMapaParametrizado(ParametrosGeracao params);
-int GerarESalvarMapa(ParametrosGeracao params, const char *nome_arquivo);
+
 
 #endif

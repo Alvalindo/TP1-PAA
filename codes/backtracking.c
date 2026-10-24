@@ -1,5 +1,5 @@
-#include "../header/backtracking.h"
-#include "../header/analise.h"
+#include "../headers/backtracking.h"
+#include "../headers/analise.h"
 
 int explorador_labirinto(Labirinto* _labirinto, int YposAtual, int XposAtual, int chavesColetadas){
 

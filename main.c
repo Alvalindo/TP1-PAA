@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "header/labirinto.h"
-#include "header/backtracking.h"
-#include "header/caminho.h"
-#include "header/saida.h"
-#include "header/todos_os_caminhos.h"
-#include "header/analise.h"
+#include "headers/labirinto.h"
+#include "headers/backtracking.h"
+#include "headers/caminho.h"
+#include "headers/saida.h"
+#include "headers/todos_os_caminhos.h"
+#include "headers/analise.h"
 
-#include "header/utils.h"
+#include "headers/menu.h"
 
 #ifdef _WIN32
     #include <windows.h>

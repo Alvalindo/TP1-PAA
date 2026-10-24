@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "../header/gerador.h"
+#include "../headers/gerador.h"
 
 static const int dL[4] = {-1, 1, 0, 0};
 static const int dC[4] = {0, 0, -1, 1};
@@ -56,48 +56,6 @@ void LiberarMapa(Mapa *m) {
     free(m);
 }
 
-Mapa* CarregarMapaArquivo(const char *nome_arquivo) {
-    FILE *fp = fopen(nome_arquivo, "r");
-    if (!fp) {
-        perror("Erro ao abrir o arquivo do mapa");
-        return NULL;
-    }
-
-    int linhas, colunas, chaves;
-    if (fscanf(fp, "%d %d", &linhas, &colunas) != 2) {
-        fclose(fp);
-        return NULL;
-    }
-    if (fscanf(fp, "%d", &chaves) != 1) {
-        fclose(fp);
-        return NULL;
-    }
-
-    Mapa *m = AlocarMapa(linhas, colunas, chaves);
-    if (!m) {
-        fclose(fp);
-        return NULL;
-    }
-
-    for (int i = 0; i < linhas; i++) {
-        for (int j = 0; j < colunas; j++) {
-            char c;
-            if (fscanf(fp, " %c", &c) == 1) {
-                m->matriz[i][j] = c;
-                if (c == INICIO) {
-                    m->inicio_linha = i;
-                    m->inicio_coluna = j;
-                } else if (c == BAU) {
-                    m->bau_linha = i;
-                    m->bau_coluna = j;
-                }
-            }
-        }
-    }
-
-    fclose(fp);
-    return m;
-}
 
 int SalvarMapaArquivo(const Mapa *m, const char *nome_arquivo) {
     if (!m) return 0;
@@ -111,7 +69,6 @@ int SalvarMapaArquivo(const Mapa *m, const char *nome_arquivo) {
     fprintf(fp, "%d %d\n", m->linhas, m->colunas);
     fprintf(fp, "%d\n", m->chaves_necessarias);
 
-    // Formato da especificação: células separadas por espaço
     for (int i = 0; i < m->linhas; i++) {
         for (int j = 0; j < m->colunas; j++) {
             fprintf(fp, "%c%c", m->matriz[i][j], (j < m->colunas - 1) ? ' ' : '\n');
@@ -131,8 +88,7 @@ static void BaralharDirecoes(int dirs[4]) {
     }
 }
 
-// Limite de chamadas da construção do caminho: sem ele, a busca por um caminho
-// simples longo pode levar tempo exponencial em mapas grandes/apertados.
+// Limite de chamadas da construção do caminho
 static long orcamento_construcao;
 
 static int ConstruirCaminhoSimples(int l, int c, int passo_atual, int meta,
@@ -202,7 +158,6 @@ Mapa* GerarMapaParametrizado(ParametrosGeracao params) {
         int *cam_c = (int*) malloc(max_passos * sizeof(int));
         int tamanho_caminho = 0;
 
-        // Várias tentativas: cada uma sorteia tamanho e ponto de partida, com orçamento próprio
         for (int tentativa = 0; tentativa < 200 && !caminho_criado && cam_l && cam_c; tentativa++) {
             tamanho_caminho = min_passos + (rand() % (max_passos - min_passos + 1));
 
@@ -283,11 +238,3 @@ Mapa* GerarMapaParametrizado(ParametrosGeracao params) {
     return m;
 }
 
-int GerarESalvarMapa(ParametrosGeracao params, const char *nome_arquivo) {
-    Mapa *m = GerarMapaParametrizado(params);
-    if (!m) return 0;
-
-    int sucesso = SalvarMapaArquivo(m, nome_arquivo);
-    LiberarMapa(m);
-    return sucesso;
-}

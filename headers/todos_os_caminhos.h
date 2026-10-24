@@ -2,7 +2,7 @@
 #define TODOS_OS_CAMINHOS_H
 
 #include <stdbool.h>
-#include "../header/labirinto.h"
+#include "labirinto.h"
 
 // Estrutura para representar uma posição (linha, coluna) no labirinto
 typedef struct {

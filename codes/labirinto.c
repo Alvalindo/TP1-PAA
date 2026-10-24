@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../header/labirinto.h"
+#include "../headers/labirinto.h"
 
 void liberarLabirinto(Labirinto *lab){    //Verifica se o ponteiro recebido é válido
     if (lab == NULL){

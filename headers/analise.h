@@ -2,7 +2,7 @@
 #define ANALISE_H
 
 #include <stdbool.h>
-#include "../header/labirinto.h"
+#include "labirinto.h"
 
 /*
  * MODO ANALISE
