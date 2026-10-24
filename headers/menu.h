@@ -5,14 +5,15 @@
 
 #include "labirinto.h"
 #include "todos_os_caminhos.h"
+#include "analise.h"
 
 #define LIMITE_CRIATIVO 20
 
 int lerLinha(char *buf, size_t tam);
-void exibirMenu(void);
+void exibirMenu(Analise *A);
 void descartarLabirinto(Labirinto *lab, TodosOsCaminhos **lista, int *carregado);
 void mostrarResumoLabirinto(const Labirinto *lab);
 int gerarLabirinto(Labirinto *lab);
-void alternarModoAnalise(void);
+void alternarModoAnalise(Analise *A);
 
 #endif

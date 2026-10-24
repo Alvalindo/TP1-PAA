@@ -11,21 +11,14 @@
 #include "../headers/analise.h"
 #include "../headers/menu.h"
 
-#define TAMANHO_MAXIMO_GERADO 50          // evita recursao profunda demais (pilha) em mapas gigantes
+#define TAMANHO_MAXIMO_GERADO 50
 #define ARQUIVO_GERADO_PADRAO "labirinto_gerado.txt"
 #define PASTA_MAPAS "testes/"    // pasta onde os mapas gerados sao guardados
-#define RASTREIO_PADRAO 100               // chamadas exibidas no modo analise, por padrao
 
 #ifdef _WIN32
     #include <windows.h>
 #endif
 
-
-// ---------------------------------------------------------------------------
-// Leitura de entrada (fgets em vez de scanf, para nao deixar '\n' no buffer)
-// ---------------------------------------------------------------------------
-
-// Le uma linha sem o '\n'. Retorna 0 em EOF.
 int lerLinha(char *buf, size_t tam) {
     if (fgets(buf, (int)tam, stdin) == NULL) {
         return 0;
@@ -34,7 +27,6 @@ int lerLinha(char *buf, size_t tam) {
     return 1;
 }
 
-// Le um inteiro em [min, max]. Linha vazia = padrao. Repete ate ser valido.
 static long int lerInteiro(const char *pergunta, long int min, long int max, long int padrao) {
     char buf[64];
 
@@ -59,7 +51,6 @@ static long int lerInteiro(const char *pergunta, long int min, long int max, lon
     }
 }
 
-// Pergunta s/n. Linha vazia = padrao.
 static int lerSimNao(const char *pergunta, int padrao) {
     char buf[16];
 
@@ -75,11 +66,7 @@ static int lerSimNao(const char *pergunta, int padrao) {
 }
 
 
-// ---------------------------------------------------------------------------
-// Menu e utilitarios
-// ---------------------------------------------------------------------------
-
-void exibirMenu(void) {
+void exibirMenu(Analise *A) {
     printf("\n=========================================\n");
     printf("   EXPLORADOR DE LABIRINTO   \n");
     printf("=========================================\n");
@@ -90,7 +77,7 @@ void exibirMenu(void) {
     printf("4. Resolver (Buscar TODOS os caminhos validos)\n");
     printf("5. Exibir caminho formatado/criativo (apos a opcao 3)\n");
     printf("6. Exibir TODOS os caminhos de forma criativa (apos a opcao 4)\n");
-    printf("7. Modo analise: %s\n", analise_ativa() ? "LIGADO (desligar)" : "DESLIGADO (ligar)");
+    printf("7. Modo analise: %s\n", analise_ativa(A) ? "LIGADO (desligar)" : "DESLIGADO (ligar)");
     printf("0. Sair\n");
 
     printf("=========================================\n");
@@ -98,7 +85,7 @@ void exibirMenu(void) {
     printf("Escolha uma opcao: ");
 }
 
-// Libera o labirinto atual e os caminhos associados a ele.
+//libera o labirinto atual e os caminhos associados a ele
 void descartarLabirinto(Labirinto *lab, TodosOsCaminhos **lista, int *carregado) {
     todos_caminhos_liberar(*lista);
     *lista = NULL;
@@ -114,8 +101,6 @@ void mostrarResumoLabirinto(const Labirinto *lab) {
            lab->linhas, lab->colunas, lab->chavesNecessarias, lab->inicioL, lab->inicioC);
 }
 
-// Opcao 1: pergunta os parametros, gera o mapa, salva em arquivo e carrega em `lab`
-// (assim as demais opcoes do menu usam exatamente o mesmo labirinto gerado).
 int gerarLabirinto(Labirinto *lab) {
     ParametrosGeracao p;
     char arquivo[256];
@@ -126,7 +111,7 @@ int gerarLabirinto(Labirinto *lab) {
     p.linhas  = (int)lerInteiro("Numero de linhas", 3, TAMANHO_MAXIMO_GERADO, 10);
     p.colunas = (int)lerInteiro("Numero de colunas", 3, TAMANHO_MAXIMO_GERADO, 10);
 
-    int maxChaves = p.linhas * p.colunas - 2;     // 'A' e 'X' ocupam duas salas
+    int maxChaves = p.linhas * p.colunas - 2;
     long int chavesPadrao = (maxChaves < 2) ? maxChaves : 2;
     p.num_chaves = (int)lerInteiro("Chaves necessarias para abrir o bau", 0, maxChaves, chavesPadrao);
 
@@ -135,7 +120,7 @@ int gerarLabirinto(Labirinto *lab) {
 
     long int semente = lerInteiro("Semente aleatoria (0 = sortear)", 0, INT_MAX, 0);
     if (semente == 0) {
-        semente = (long int)time(NULL) % INT_MAX;   // sorteada aqui para poder ser mostrada e reproduzida
+        semente = (long int)time(NULL) % INT_MAX;
     }
     p.semente = (unsigned int)semente;
 
@@ -145,7 +130,7 @@ int gerarLabirinto(Labirinto *lab) {
         snprintf(nome, sizeof(nome), "%s", ARQUIVO_GERADO_PADRAO);
     }
  
-    if (strchr(nome, '/') != NULL || strchr(nome, '\\') != NULL) {           // Se o usuario digitou um caminho (com / ou \), usa como esta; senao guarda na pasta de mapas
+    if (strchr(nome, '/') != NULL || strchr(nome, '\\') != NULL) {
         snprintf(arquivo, sizeof(arquivo), "%s", nome);
     } else {
         snprintf(arquivo, sizeof(arquivo), "%s%s", PASTA_MAPAS, nome);
@@ -180,7 +165,6 @@ int gerarLabirinto(Labirinto *lab) {
     }
     mostrarResumoLabirinto(lab);
 
-    // O backtracking tem custo exponencial: mapas grandes e abertos podem levar muito tempo
     if (p.linhas * p.colunas > 100 && p.densidade_paredes < 40) {
         printf("Aviso: mapa grande com poucas paredes. A busca por backtracking pode demorar muito\n");
         printf("       (principalmente a opcao 4). Para testes rapidos use ate ~10x10 ou mais paredes.\n");
@@ -191,19 +175,7 @@ int gerarLabirinto(Labirinto *lab) {
     return 1;
 }
 
-// Opcao 7: liga/desliga o modo analise
-void alternarModoAnalise(void) {
-    if (analise_ativa()) {
-        analise_configurar(false, analise_limite_rastreio());
-        printf("\nModo analise DESLIGADO.\n");
-        return;
-    }
-
-    printf("\nModo analise LIGADO: ao resolver (opcoes 3 e 4) serao exibidos o rastreio das\n");
-    printf("chamadas recursivas e o resumo (total de chamadas, nivel maximo, retrocessos, ...).\n");
-    printf("Atencao: a busca de TODOS os caminhos faz muitas chamadas; limite o rastreio.\n\n");
-
-    long int limite = lerInteiro("Chamadas recursivas a exibir no rastreio (0 = so resumo, -1 = todas)",
-                                 -1, INT_MAX, RASTREIO_PADRAO);
-    analise_configurar(true, limite);
+void alternarModoAnalise(Analise *A) {
+    analise_configurar(A, !analise_ativa(A));
+    printf("\nModo analise %s.\n", analise_ativa(A) ? "LIGADO" : "DESLIGADO");
 }

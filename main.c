@@ -24,6 +24,7 @@ int main(void) {
 
     Labirinto lab = {0};
     TodosOsCaminhos *listaCaminhos = NULL;
+    Analise *analise = analise_estado();
 
     int arquivoCarregado = 0;
     int opcao = -1;
@@ -31,7 +32,7 @@ int main(void) {
     char caminhoArquivo[256];
 
     while (opcao != 0) {
-        exibirMenu();
+        exibirMenu(analise);
 
         if (!lerLinha(entrada, sizeof(entrada))) {   // EOF (entrada redirecionada acabou)
             opcao = 0;
@@ -84,9 +85,8 @@ int main(void) {
                 caminho_inicializar(&lab);
 
                 printf("\nBuscando primeiro caminho\n");
-                analise_iniciar(&lab, "Primeiro caminho (explorador_labirinto)");
+                analise_iniciar(analise);
                 int encontrou = explorador_labirinto(&lab, lab.inicioL, lab.inicioC, 0);
-                analise_finalizar();
 
                 if (encontrou) {
                     printf("\nCaminho encontrado:\n");
@@ -98,7 +98,7 @@ int main(void) {
                     imprimirSemCaminho();
                 }
 
-                analise_imprimir_resumo();
+                analise_imprimir(analise);
                 break;
             }
 
@@ -119,12 +119,11 @@ int main(void) {
                 }
 
                 printf("\nBuscando todos os caminhos\n");
-                analise_iniciar(&lab, "Todos os caminhos (buscar_todos_os_caminhos)");
+                analise_iniciar(analise);
                 buscar_todos_os_caminhos(&lab, lab.inicioL, lab.inicioC, 0, listaCaminhos);
-                analise_finalizar();
 
                 todos_caminhos_imprimir(listaCaminhos);
-                analise_imprimir_resumo();
+                analise_imprimir(analise);
 
                 break;
             }
@@ -161,7 +160,7 @@ int main(void) {
             }
 
             case 7:
-                alternarModoAnalise();
+                alternarModoAnalise(analise);
                 break;
 
             case 0:
