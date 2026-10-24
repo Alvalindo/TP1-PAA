@@ -69,7 +69,6 @@ int SalvarMapaArquivo(const Mapa *m, const char *nome_arquivo) {
     fprintf(fp, "%d %d\n", m->linhas, m->colunas);
     fprintf(fp, "%d\n", m->chaves_necessarias);
 
-    // Formato da especificação: células separadas por espaço
     for (int i = 0; i < m->linhas; i++) {
         for (int j = 0; j < m->colunas; j++) {
             fprintf(fp, "%c%c", m->matriz[i][j], (j < m->colunas - 1) ? ' ' : '\n');
@@ -89,8 +88,7 @@ static void BaralharDirecoes(int dirs[4]) {
     }
 }
 
-// Limite de chamadas da construção do caminho: sem ele, a busca por um caminho
-// simples longo pode levar tempo exponencial em mapas grandes/apertados.
+// Limite de chamadas da construção do caminho
 static long orcamento_construcao;
 
 static int ConstruirCaminhoSimples(int l, int c, int passo_atual, int meta,
@@ -160,7 +158,6 @@ Mapa* GerarMapaParametrizado(ParametrosGeracao params) {
         int *cam_c = (int*) malloc(max_passos * sizeof(int));
         int tamanho_caminho = 0;
 
-        // Várias tentativas: cada uma sorteia tamanho e ponto de partida, com orçamento próprio
         for (int tentativa = 0; tentativa < 200 && !caminho_criado && cam_l && cam_c; tentativa++) {
             tamanho_caminho = min_passos + (rand() % (max_passos - min_passos + 1));
 
